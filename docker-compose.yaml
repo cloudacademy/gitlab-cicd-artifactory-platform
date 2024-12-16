@@ -1,0 +1,102 @@
+networks:
+  lab:
+    driver: bridge
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:17.6.1-ce.0
+    container_name: gitlab-server-1
+    restart: always
+    environment:
+      GITLAB_ROOT_EMAIL: admin@labs.com
+      GITLAB_ROOT_PASSWORD: f0ll0wth3whit3raBB1t
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://localhost:8000'
+        nginx['listen_port'] = 8000
+        prometheus['enable'] = false
+        node_exporter['enable'] = false
+    ports:
+      - 8000:8000
+    volumes:
+      - ./vols/gitlab/config:/etc/gitlab
+      - ./vols/gitlab/data:/var/opt/gitlab
+    deploy:
+      resources:
+        limits:
+          cpus: 8.0
+          memory: 16G
+    networks:
+      - lab
+  
+  gitlab-runner:
+    image: cloudacademydevops/gitlab-runner:java-v1
+    container_name: gitlab-runner-1
+    restart: always
+    volumes:
+      - ./vols/gitlab/runner/config:/etc/gitlab-runner:z
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - lab
+
+  postgres:
+    image: postgres:13.9-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=artifactory
+      - POSTGRES_USER=artifactory
+      - POSTGRES_PASSWORD=followthewhiterabbit
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - ./vols/postgres/var/data/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    deploy:
+      resources:
+        limits:
+          cpus: 1.0
+          memory: 500M
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: 10
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+    networks:
+      - lab
+
+  artifactory:
+    image: releases-docker.jfrog.io/jfrog/artifactory-oss:7.55.9
+    container_name: artifactory
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - JF_ROUTER_ENTRYPOINTS_EXTERNALPORT=8080
+    ports:
+      - 8080:8080 # for router communication
+      - 8081:8081 # for artifactory communication
+    volumes:
+      - ./vols/artifactory/var:/var/opt/jfrog/artifactory
+      - /etc/localtime:/etc/localtime:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+        max-file: 10
+    deploy:
+      resources:
+        limits:
+          cpus: 2.0
+          memory: 4G
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+    networks:
+      - lab

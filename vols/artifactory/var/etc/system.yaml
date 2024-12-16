@@ -1,0 +1,14 @@
+shared:
+    node:
+        ip: 127.0.0.1
+        id: artifactory-one
+        name: artifactory-one
+    database:
+        type: postgresql
+        driver: org.postgresql.Driver
+        password: f0ll0wth3whit3raBB1t
+        username: artifactory
+        url: jdbc:postgresql://postgres:5432/artifactory
+router:
+    entrypoints:
+        externalPort: 8080
