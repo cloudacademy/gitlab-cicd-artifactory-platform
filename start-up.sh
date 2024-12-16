@@ -91,6 +91,6 @@ do
     sleep 3
 done
 
-curl -X POST -u admin:password -H "Content-type: application/json" -d '{ "userName" : "admin", "oldPassword" : "password", "newPassword1" : "f0ll0wth3whit3raBB1t", "newPassword2" : "f0ll0wth3whit3raBB1t" }' http://localhost:8081/artifactory/api/security/users/authorization/changePassword
+curl -X POST -u admin:password -H "Content-type: application/json" -d '{ "userName" : "admin", "oldPassword" : "password", "newPassword1" : "f0ll0wth3whit3raBB1t!!", "newPassword2" : "f0ll0wth3whit3raBB1t!!" }' http://localhost:8081/artifactory/api/security/users/authorization/changePassword
 
 echo finished
