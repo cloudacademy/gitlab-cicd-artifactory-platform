@@ -6,8 +6,8 @@ shared:
     database:
         type: postgresql
         driver: org.postgresql.Driver
-        password: f0ll0wth3whit3raBB1t
         username: artifactory
+        password: f0ll0wth3whit3r@@BB1t
         url: jdbc:postgresql://postgres:5432/artifactory
 router:
     entrypoints:
