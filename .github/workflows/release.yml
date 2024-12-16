@@ -25,7 +25,7 @@ jobs:
       - name: Package
         run: |
           echo packaging...
-          tar -czf release-${{ env.RELEASE_VERSION }}.tar.gz docker-compose.yaml vols
+          tar -czf release-${{ env.RELEASE_VERSION }}.tar.gz docker-compose.yaml vols start-up.sh
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
