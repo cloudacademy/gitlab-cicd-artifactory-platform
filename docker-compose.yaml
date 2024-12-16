@@ -45,7 +45,7 @@ services:
     environment:
       - POSTGRES_DB=artifactory
       - POSTGRES_USER=artifactory
-      - POSTGRES_PASSWORD=followthewhiterabbit
+      - POSTGRES_PASSWORD=f0ll0wth3whit3raBB1t
     ports:
       - 127.0.0.1:5432:5432
     volumes:
